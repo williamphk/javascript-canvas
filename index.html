@@ -19,44 +19,11 @@
     <script>
       var canvas = document.getElementById("canvas");
       var context = canvas.getContext("2d");
-      //   context.beginPath();
-      //   context.arc(100, 100, 40, 0, 2 * Math.PI);
-      //   context.fillStyle = "red";
-      //   context.fill();
-      //   context.stroke();
 
-      //   context.beginPath();
-      //   context.arc(80, 80, 10, 0, 5 * Math.PI);
-      //   context.fillStyle = "blue";
-      //   context.fill();
-      //   context.stroke();
-
-      //   context.beginPath();
-      //   context.arc(120, 80, 10, 0, 5 * Math.PI);
-      //   context.fillStyle = "blue";
-      //   context.fill();
-      //   context.stroke();
-
-      //   context.beginPath();
-      //   context.arc(100, 100, 30, 0 * Math.PI, 1 * Math.PI);
-      //   context.fillStyle = "white";
-      //   context.fill();
-      //   context.stroke();
-
-      //   context.fillStyle = "green";
-      //   context.font = "30px Arial";
-      //   context.fillText("Hello World", 20, 200);
-
-      //   var circleX = 40;
-      //   var circleDirX = "right";
-      //   var circleY = 40;
-      //   var circleDirY = "down";
-
-      //   const distance = (x1, y1, x2, y2) => Math.hypot(x2 - x1, y2 - y1);
-      let x = 0;
-      let y = 0;
-      let previousX = 0;
-      let previousY = 0;
+      let x = null;
+      let y = null;
+      let previousX = null;
+      let previousY = null;
       let distance = 0;
 
       canvas.addEventListener("mousemove", function (event) {
@@ -68,35 +35,36 @@
         x = event.clientX - rect.left;
         y = event.clientY - rect.top;
 
-        let distanceX = Math.round(x - previousX);
-        if (distanceX < 0) distanceX *= -1;
-        let distanceY = Math.round(y - previousY);
-        if (distanceY < 0) distanceY *= -1;
+        if (previousX != null) {
+          let distanceX = Math.round(x - previousX);
+          if (distanceX < 0) distanceX *= -1;
+          let distanceY = Math.round(y - previousY);
+          if (distanceY < 0) distanceY *= -1;
 
-        distance = Math.sqrt(Math.pow(distanceX, 2) + Math.pow(distanceY, 2));
+          distance = Math.hypot(distanceX, distanceY);
+          if (distance > 50) distance = 50;
 
-        console.log(Math.round(distance));
+          context.beginPath();
 
-        context.lineTo(x, y);
-        context.stroke();
+          const randomR = Math.floor(Math.random() * 256);
+          const randomG = Math.floor(Math.random() * 256);
+          const randomB = Math.floor(Math.random() * 256);
 
-        // context.clearRect(0, 0, 300, 300);
+          context.strokeStyle = `rgb(${randomR}, ${randomG}, ${randomB})`;
+          context.lineWidth = 50 - distance * 2;
 
-        // context.beginPath();
-        // context.arc(circleX, circleY, 40, 0, 2 * Math.PI);
-        // context.stroke();
+          context.moveTo(previousX, previousY);
+          context.lineTo(x, y);
+          //context.stroke();
 
-        // if (circleDirX == "right") circleX += 80.8;
-        // else circleX -= 80.8;
-
-        // if (circleX > 260) circleDirX = "left";
-        // if (circleX < 40) circleDirX = "right";
-
-        // if (circleDirY == "down") circleY += 100.5;
-        // else circleY -= 100.5;
-
-        // if (circleY > 260) circleDirY = "up";
-        // if (circleY < 40) circleDirY = "down";
+          if (distance < 10) {
+            context.beginPath();
+            context.lineWidth = 0;
+            context.fillStyle = `rgb(${randomR}, ${randomG}, ${randomB})`;
+            context.arc(x, y, distance, 0, 2 * Math.PI);
+            context.fill();
+          }
+        }
       });
     </script>
   </body>
